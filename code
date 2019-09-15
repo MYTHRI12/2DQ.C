@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "coeffs1.h"
+
+int main()
+{
+int m,n, len ;
+double **P,**O, **r,**R_1,**R_2,**Q_1,**Q_2,**omat,**I,**S_1,**S_2,**R_1_inv,**R_2_inv;
+double d_1,d_2,k,k_1,k_2,**temp,d_3;
+
+//Generate line points
+len = 100;
+
+P = loadtxt("./data/P1.dat",2,1);
+O = loadtxt("./data/O.dat",2,1);
+I= loadtxt("./data/mat1.dat",2,2);
+omat = loadtxt("./data/omat.dat",2,2);
+r = loadtxt("./data/r.dat",1,1);
+
+temp = linalg_sub(O,P,2,1);
+d_1 = linalg_norm(temp,2);
+free(temp);
+
+
+d_2 = (pow(d_1,2)) - (pow(linalg_norm(r,1),2));
+d_2=sqrt(d_2);
+
+
+k_1=d_2/sqrt(9);
+k_2=-d_2/sqrt(9);
+
+
+S_1 = linalg_smul(omat,k_1,2,2);
+S_2 = linalg_smul(omat,k_2,2,2);
+
+
+
+R_1=linalg_add(I,S_1,2,2);
+R_2=linalg_add(I,S_2,2,2);
+
+
+R_1_inv = linalg_inv(R_1,2);
+R_2_inv = linalg_inv(R_2,2);
+
+Q_1 = matmul(R_1_inv,P,2,2,1);
+Q_2 = matmul(R_2_inv,P,2,2,1);
+print(Q_1,2,1);
+print(Q_2,2,1);
+
+free(P);
+free(O);
+free(I);
+free(omat);
+free(R_1);
+free(R_2);
+free(Q_1);
+free(Q_2);
+free(R_1_inv);
+free(R_2_inv);
+free(S_1);
+free(S_2);
+
+}
